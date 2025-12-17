@@ -160,9 +160,11 @@ impl Mediawiki {
         if !image["missing"].is_null() {
             return Ok(None);
         }
-        let url = image["imageinfo"][0]["url"]
+        let lossy_url = image["imageinfo"][0]["url"]
             .as_str()
             .ok_or_else(|| Error::Json(image.clone()))?;
+        let url = format!("{}{}format=original", lossy_url,
+                          if lossy_url.contains('?') { '&' } else { '?' });
         let mut response = loop {
             let mut request = self.client.request(Method::GET, url);
             request = request.header(USER_AGENT, &*self.config.useragent);
