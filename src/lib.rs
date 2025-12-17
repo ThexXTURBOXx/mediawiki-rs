@@ -166,7 +166,7 @@ impl Mediawiki {
         let url = format!("{}{}format=original", lossy_url,
                           if lossy_url.contains('?') { '&' } else { '?' });
         let mut response = loop {
-            let mut request = self.client.request(Method::GET, url);
+            let mut request = self.client.request(Method::GET, &url);
             request = request.header(USER_AGENT, &*self.config.useragent);
             let response = request.send()?;
             if response.status() == StatusCode::OK {
